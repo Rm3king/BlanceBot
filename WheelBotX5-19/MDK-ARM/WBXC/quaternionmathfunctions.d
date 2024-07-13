@@ -1,0 +1,24 @@
+wbxc/quaternionmathfunctions.o: \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Source\QuaternionMathFunctions\QuaternionMathFunctions.c \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Source\QuaternionMathFunctions\arm_quaternion_norm_f32.c \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Include\dsp\quaternion_math_functions.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Include\arm_math_types.h \
+  ..\Drivers\CMSIS\Include\cmsis_compiler.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\ARMCLANG\Bin\..\include\stdint.h \
+  ..\Drivers\CMSIS\Include\cmsis_armclang.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\ARMCLANG\Bin\..\include\arm_compat.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\ARMCLANG\Bin\..\include\arm_acle.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\ARMCLANG\Bin\..\include\string.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\ARMCLANG\Bin\..\include\math.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\ARMCLANG\Bin\..\include\float.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\ARMCLANG\Bin\..\include\limits.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Include\arm_math_memory.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Include\dsp\none.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Include\dsp\utils.h \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Source\QuaternionMathFunctions\arm_quaternion_inverse_f32.c \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Source\QuaternionMathFunctions\arm_quaternion_conjugate_f32.c \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Source\QuaternionMathFunctions\arm_quaternion_normalize_f32.c \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Source\QuaternionMathFunctions\arm_quaternion_product_single_f32.c \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Source\QuaternionMathFunctions\arm_quaternion_product_f32.c \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Source\QuaternionMathFunctions\arm_quaternion2rotation_f32.c \
+  D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\CMSIS-DSP\1.14.2\Source\QuaternionMathFunctions\arm_rotation2quaternion_f32.c
