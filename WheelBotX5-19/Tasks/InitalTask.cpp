@@ -203,7 +203,7 @@ static void DebugThreadFun(ULONG initial_input)
      __HAL_TIM_SetCompare(&htim3, TIM_CHANNEL_2, serve_moto);
 		//²âÊÔÍÈÎó²î,×ó1ÓÒ0
 		//Txlen = DebugPrintf(pbufx,"f=%f,g=%f,V=%f,L=%d,",RobotControl->ChasisControl.Get_GravityForward(),RobotControl->ChasisControl.Get_CheckOG_Value(),RobotControl->ChasisControl.ObserveVal.X[3]*10,RobotControl->ChasisControl.GetLegLenFlag()*10);
-		Txlen = DebugPrintf(pbufx,"Llen_dot1=%f,Llen_dot2=%f,Lleg_OG=%f,Rleg_OG=%f,",RobotControl->ChasisControl.Lleg_ObserveVal.ChasisFn,RobotControl->ChasisControl.Rleg_ObserveVal.ChasisFn,Leg_Rdot[0],(float)(RobotControl->ChasisControl.ChectLleg_OG()),(float)(RobotControl->ChasisControl.ChectRleg_OG()));
+		Txlen = DebugPrintf(pbufx,"Llen_dot1=%f,Llen_dot2=%f,",RobotControl->ChasisControl.Lleg_ObserveVal.ChasisFn,RobotControl->ChasisControl.Rleg_ObserveVal.ChasisFn,Leg_Rdot[0]);
 //    Txlen = DebugPrintf(pbufx,"Llen_dot0=%f,Llen_dot1=%f,Llen_dot2=%f,",RobotControl->ChasisControl.Rleg_ObserveVal.X[0],RobotControl->ChasisControl.Rleg_ObserveVal.X[1],RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel);
 		SCB_CleanInvalidateDCache_by_Addr((uint32_t*)pbufx,Txlen);
 		UARTDebug.Transmit_DMA(pbufx,Txlen);

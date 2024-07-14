@@ -13,7 +13,6 @@ extern cINS *INS;
 TX_THREAD	CloseLoopThread;
 uint8_t 	CloseLoopThreadStack[1024]={0};
 float outbut[2];
-//float greavity_forward = 71.0f;//重力前馈测试,71.0f
 volatile float realaccelX;
 uint8_t StartFlag;
 uint8_t offground_flag = 1;
@@ -49,16 +48,7 @@ void CloseLoopThreadFun(ULONG initial_input)
 		/*Body radian calculate*/
 		RobotControl->ChasisControl.ObserveVal.ChasisPsaiYaw	+= psait;
 		RobotControl->ChasisControl.ObserveVal.ChasisRoll		= QCS.Roll(INS->Q);
-		RobotControl->ChasisControl.ObserveVal.ChasisPitch		= QCS.Pitch(INS->Q);
-			
-//		if(RobotControl->ComDown.RobotDeath==1)
-//		{
-//			StartFlag = 0;
-//			//RobotControl->ChasisControl.SetCFGENStatue(1);
-//		}
-
-
-		
+		RobotControl->ChasisControl.ObserveVal.ChasisPitch		= QCS.Pitch(INS->Q);		
 		if(RobotControl->CheckRobotMode()==ROBOTMODE_IDLE)
 		{
 			StartFlag = 0;
@@ -242,19 +232,7 @@ void CloseLoopThreadFun(ULONG initial_input)
 			
 			//腿长//
 			//腿长期望  是否有Roll轴
-//			RobotControl->ChasisControl.LoopLen[0].SetRef(Lentmp[0] + RobotControl->ChasisControl.LoopRoll.GetOut());
-//			RobotControl->ChasisControl.LoopLen[1].SetRef(Lentmp[1] - RobotControl->ChasisControl.LoopRoll.GetOut());
-////			RobotControl->ChasisControl.LoopLen[0].SetRef(Lentmp[0]);
-////			RobotControl->ChasisControl.LoopLen[1].SetRef(Lentmp[1]);
-//			RobotControl->ChasisControl.LoopLen[0].PID_Cal(RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumLen());
-//			RobotControl->ChasisControl.LoopLen[1].PID_Cal(RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumLen());
 			//为状态观测器准备数据
-			volatile float LegRealrad = 0.5f*(RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumRadian()+RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumRadian());
-			//volatile float LegRealrad = RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumRadian();
-			volatile float costheta;
-			volatile float sintheta;	
-			static float   ThetaLast;
-			static float lengthLast[2];
 			float Lleg_Tlqr[2]={0};
 			float Rleg_Tlqr[2]={0};
 			/* 腿长速度计算 */
@@ -266,26 +244,18 @@ void CloseLoopThreadFun(ULONG initial_input)
 			leg_vel[1] = RobotControl->ChasisControl.MotorUnits->LEGMotor[3].GetVelocity();
 			RobotControl->ChasisControl.MotorUnits->LinkSolver[1].VMCRevCal_Radian(leg_vel,R_leg_dot);
 			RobotControl->ChasisControl.MotorUnits->LinkSolver[1].VMCVelCal(leg_vel,Leg_Rdot);
-			/*Set observation*/
-			RobotControl->ChasisControl.ObserveVal.X[0] = LegRealrad + RobotControl->ChasisControl.ObserveVal.ChasisPitch - PI_Half; 
+			/*Set observation*/ 
 			RobotControl->ChasisControl.Lleg_ObserveVal.X[0] = RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumRadian() + RobotControl->ChasisControl.ObserveVal.ChasisPitch - PI_Half ;
 			RobotControl->ChasisControl.Rleg_ObserveVal.X[0] = RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumRadian() + RobotControl->ChasisControl.ObserveVal.ChasisPitch - PI_Half ;
 			RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot = -1.5*Leg_Ldot[0];
 			RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot = 1.5*Leg_Rdot[0];
-			costheta = arm_cos_f32(RobotControl->ChasisControl.ObserveVal.X[0]);
-			sintheta = arm_sin_f32(RobotControl->ChasisControl.ObserveVal.X[0]);
 			/* 微分计算摆角速度 */
-			RobotControl->ChasisControl.ObserveVal.X[1] = 500.0f*(RobotControl->ChasisControl.ObserveVal.X[0] - ThetaLast);
-			lengthLast[0] = RobotControl->ChasisControl.ObserveVal.X[0];
-//			RobotControl->ChasisControl.ObserveVal.X[1] = Leg_Ldot[1]-Leg_Rdot[1]-INS->Gyro[1];
-			RobotControl->ChasisControl.ObserveVal.X[4] = -RobotControl->ChasisControl.ObserveVal.ChasisPitch;
 			RobotControl->ChasisControl.Lleg_ObserveVal.X[1] = 1.5*Leg_Ldot[1]-INS->Gyro[1];
 			RobotControl->ChasisControl.Rleg_ObserveVal.X[1] = -1.5*Leg_Rdot[1]-INS->Gyro[1];
 			RobotControl->ChasisControl.Lleg_ObserveVal.X[4] = -RobotControl->ChasisControl.ObserveVal.ChasisPitch;
 			RobotControl->ChasisControl.Rleg_ObserveVal.X[4] = -RobotControl->ChasisControl.ObserveVal.ChasisPitch;
 			RobotControl->ChasisControl.Lleg_ObserveVal.X[5] = INS->Gyro[1];
 			RobotControl->ChasisControl.Rleg_ObserveVal.X[5] = INS->Gyro[1];
-/**/		RobotControl->ChasisControl.ObserveVal.X[5] = INS->Gyro[1];
 			/*This is the really pitch. Different control board position should be treated differently*/
 			/*Calculate body displacement and body velocity. Calculated from wheel and leg.*/
 			/*Velocity Kalman filter calculate*/
@@ -308,22 +278,17 @@ void CloseLoopThreadFun(ULONG initial_input)
 				RobotControl->ChasisControl.obervalx[0]=RobotControl->ChasisControl.VelKF->KF.xhat.pData[0];
 				RobotControl->ChasisControl.obervalx[1]=RobotControl->ChasisControl.VelKF->KF.xhat.pData[1];
 //			}
-			RobotControl->ChasisControl.ObserveVal.X[2] = RobotControl->ChasisControl.obervalx[0];
-			RobotControl->ChasisControl.ObserveVal.X[3] = RobotControl->ChasisControl.obervalx[1];
 			RobotControl->ChasisControl.Lleg_ObserveVal.X[2] = RobotControl->ChasisControl.obervalx[0];
 			RobotControl->ChasisControl.Lleg_ObserveVal.X[3] = RobotControl->ChasisControl.obervalx[1];		
 			RobotControl->ChasisControl.Rleg_ObserveVal.X[2] = RobotControl->ChasisControl.obervalx[0];
 			RobotControl->ChasisControl.Rleg_ObserveVal.X[3] = RobotControl->ChasisControl.obervalx[1];					
 			/*LQR*/ 	
 			/*Set reference*/
-			RobotControl->ChasisControl.TargetVal.X[1] = 0;
 			RobotControl->ChasisControl.Lleg_TargetVal.X[1] = 0;
 			RobotControl->ChasisControl.Rleg_TargetVal.X[1] = 0;
       //速度较小时  状态变化不大 使用目标值代替观测值 保证连续和平滑 
 			if(fabs(RobotControl->ChasisControl.GetForwardVelocity())<=0.1f)
 			{
-				RobotControl->ChasisControl.TargetVal.X[2] = DisplacementBTW.BTW2Cal(RobotControl->ChasisControl.TargetVal.X[2] + 0.002f*RobotControl->ChasisControl.GetForwardVelocity());
-				RobotControl->ChasisControl.TargetVal.X[3] = VelocityBTW.BTW2Cal(RobotControl->ChasisControl.GetForwardVelocity());
 				RobotControl->ChasisControl.Lleg_TargetVal.X[2] = DisplacementBTW.BTW2Cal(RobotControl->ChasisControl.Lleg_TargetVal.X[2] + 0.002f*RobotControl->ChasisControl.GetForwardVelocity());
 				RobotControl->ChasisControl.Lleg_TargetVal.X[3] = VelocityBTW.BTW2Cal(RobotControl->ChasisControl.GetForwardVelocity());
 				RobotControl->ChasisControl.Rleg_TargetVal.X[2] = DisplacementBTW.BTW2Cal(RobotControl->ChasisControl.Rleg_TargetVal.X[2] + 0.002f*RobotControl->ChasisControl.GetForwardVelocity());
@@ -331,47 +296,41 @@ void CloseLoopThreadFun(ULONG initial_input)
 			}
 			else
 			{
-				RobotControl->ChasisControl.TargetVal.X[2] = DisplacementBTW.BTW2Cal(RobotControl->ChasisControl.ObserveVal.X[2] + 0.002f*RobotControl->ChasisControl.GetForwardVelocity());
-				RobotControl->ChasisControl.TargetVal.X[3] = VelocityBTW.BTW2Cal(RobotControl->ChasisControl.GetForwardVelocity());
 				RobotControl->ChasisControl.Lleg_TargetVal.X[2] = DisplacementBTW.BTW2Cal(RobotControl->ChasisControl.Lleg_ObserveVal.X[2] + 0.002f*RobotControl->ChasisControl.GetForwardVelocity());
 				RobotControl->ChasisControl.Lleg_TargetVal.X[3] = VelocityBTW.BTW2Cal(RobotControl->ChasisControl.GetForwardVelocity());
 				RobotControl->ChasisControl.Rleg_TargetVal.X[2] = DisplacementBTW.BTW2Cal(RobotControl->ChasisControl.Rleg_ObserveVal.X[2] + 0.002f*RobotControl->ChasisControl.GetForwardVelocity());
 				RobotControl->ChasisControl.Rleg_TargetVal.X[3] = VelocityBTW.BTW2Cal(RobotControl->ChasisControl.GetForwardVelocity());
 			}
-			RobotControl->ChasisControl.TargetVal.X[4] = 0;
-			RobotControl->ChasisControl.TargetVal.X[5] = 0;
 			RobotControl->ChasisControl.Lleg_TargetVal.X[4] = 0;
 			RobotControl->ChasisControl.Lleg_TargetVal.X[5] = 0;	
 			RobotControl->ChasisControl.Rleg_TargetVal.X[4] = 0;
 			RobotControl->ChasisControl.Rleg_TargetVal.X[5] = 0;			
-			ThetaLast = RobotControl->ChasisControl.ObserveVal.X[0];
 			
 			/*Off ground check*/
 			{
 				/* 数据准备 */
-				volatile float LegRealLength=0.5f*(RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumLen()+RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumLen());
 				float FT_L_Real[2]={0};float TorqueL_Real[2]={-RobotControl->ChasisControl.MotorUnits->LEGMotor[0].GetToqReal(),-RobotControl->ChasisControl.MotorUnits->LEGMotor[1].GetToqReal()};
 				float FT_R_Real[2]={0};float TorqueR_Real[2]={RobotControl->ChasisControl.MotorUnits->LEGMotor[2].GetToqReal(),RobotControl->ChasisControl.MotorUnits->LEGMotor[3].GetToqReal()};
 				RobotControl->ChasisControl.MotorUnits->LinkSolver[0].VMCRevCal(FT_L_Real,TorqueL_Real);
 				RobotControl->ChasisControl.MotorUnits->LinkSolver[1].VMCRevCal(FT_R_Real,TorqueR_Real);
 				/* 腿长加速度计算 */
 				static float LastL_lendot,LastR_lendot,LastL_Thetadot,LastR_Thetadot;
-//				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel = 0.2*RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel+400.0f*(RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot-LastL_lendot);
-//				LastL_lendot = RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot;
-//				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel = 0.2*RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel+400.0f*(RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot-LastR_lendot);
-//				LastR_lendot = RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot;	
-//				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel = 0.2*RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel+400.0f*(RobotControl->ChasisControl.Lleg_ObserveVal.X[1]-LastL_Thetadot);
-//				LastL_Thetadot = RobotControl->ChasisControl.Lleg_ObserveVal.X[1];
-//				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel = 0.2*RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel+400.0f*(RobotControl->ChasisControl.Rleg_ObserveVal.X[1]-LastR_Thetadot);
-//				LastR_Thetadot = RobotControl->ChasisControl.Rleg_ObserveVal.X[1];
-			  RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel = RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot-LastL_lendot;
+				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel = 0.2*RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel+400.0f*(RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot-LastL_lendot);
 				LastL_lendot = RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot;
-				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel = RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot-LastR_lendot;
+				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel = 0.2*RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel+400.0f*(RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot-LastR_lendot);
 				LastR_lendot = RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot;	
-				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel = RobotControl->ChasisControl.Lleg_ObserveVal.X[1]-LastL_Thetadot;
+				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel = 0.2*RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel+400.0f*(RobotControl->ChasisControl.Lleg_ObserveVal.X[1]-LastL_Thetadot);
 				LastL_Thetadot = RobotControl->ChasisControl.Lleg_ObserveVal.X[1];
-				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel = RobotControl->ChasisControl.Rleg_ObserveVal.X[1]-LastR_Thetadot;
+				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel = 0.2*RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel+400.0f*(RobotControl->ChasisControl.Rleg_ObserveVal.X[1]-LastR_Thetadot);
 				LastR_Thetadot = RobotControl->ChasisControl.Rleg_ObserveVal.X[1];
+//			  RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel = RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot-LastL_lendot;
+//				LastL_lendot = RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot;
+//				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel = RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot-LastR_lendot;
+//				LastR_lendot = RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot;	
+//				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel = RobotControl->ChasisControl.Lleg_ObserveVal.X[1]-LastL_Thetadot;
+//				LastL_Thetadot = RobotControl->ChasisControl.Lleg_ObserveVal.X[1];
+//				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel = RobotControl->ChasisControl.Rleg_ObserveVal.X[1]-LastR_Thetadot;
+//				LastR_Thetadot = RobotControl->ChasisControl.Rleg_ObserveVal.X[1];
 				volatile float P_L = FT_L_Real[0]*arm_cos_f32(RobotControl->ChasisControl.Lleg_ObserveVal.X[0])+FT_L_Real[1]*arm_sin_f32(RobotControl->ChasisControl.Lleg_ObserveVal.X[0])/RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumLen();
 				volatile float P_R = FT_R_Real[0]*arm_cos_f32(RobotControl->ChasisControl.Rleg_ObserveVal.X[0])+FT_R_Real[1]*arm_sin_f32(RobotControl->ChasisControl.Rleg_ObserveVal.X[0])/RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumLen();
 				volatile float Zw_L = 
@@ -386,39 +345,21 @@ void CloseLoopThreadFun(ULONG initial_input)
 				+RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumLen()*RobotControl->ChasisControl.Rleg_ObserveVal.X[1]*RobotControl->ChasisControl.Rleg_ObserveVal.X[1]*arm_cos_f32(RobotControl->ChasisControl.Rleg_ObserveVal.X[0]);
 				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisFn = P_L+MWHEEL*GACCEL+MWHEEL*Zw_L;
 				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisFn = P_R+MWHEEL*GACCEL+MWHEEL*Zw_R;
-//				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisFn = P_L+MWHEEL*GACCEL;
-//				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisFn = P_R+MWHEEL*GACCEL;
-				//左腿检测离地
-				if(RobotControl->ChasisControl.Lleg_ObserveVal.ChasisFn<RobotControl->ChasisControl.Get_CheckOG_Value())
+				//左轮和右轮支持力同时小于阈值 则判断离地
+				if(RobotControl->ChasisControl.Lleg_ObserveVal.ChasisFn<RobotControl->ChasisControl.Get_CheckOG_Value()&&RobotControl->ChasisControl.Rleg_ObserveVal.ChasisFn<RobotControl->ChasisControl.Get_CheckOG_Value())
 				{
 					if(RobotControl->ChasisControl.Get_MoveMode()==Move_Jump&& RobotControl->ChasisControl.LastJumpMode==JUMP_STRETCH)
 					{
-						RobotControl->ChasisControl.SetLleg_OG(2);
+						RobotControl->ChasisControl.SetOG(2);
 					}
 					else 
 					{
-						RobotControl->ChasisControl.SetLleg_OG(1);
+						RobotControl->ChasisControl.SetOG(1);
 					}
 				}
 				else
 				{
-					RobotControl->ChasisControl.SetLleg_OG(0);
-				}
-				//右腿检测离地
-				if(RobotControl->ChasisControl.Rleg_ObserveVal.ChasisFn<RobotControl->ChasisControl.Get_CheckOG_Value())
-				{
-					if(RobotControl->ChasisControl.Get_MoveMode()==Move_Jump&& RobotControl->ChasisControl.LastJumpMode==JUMP_STRETCH)
-					{
-						RobotControl->ChasisControl.SetRleg_OG(2);
-					}
-					else 
-					{
-						RobotControl->ChasisControl.SetRleg_OG(1);
-					}
-				}
-				else
-				{
-					RobotControl->ChasisControl.SetRleg_OG(0);
+					RobotControl->ChasisControl.SetOG(0);
 				}
 			}
 			/*Fall out dectection*/
@@ -456,38 +397,58 @@ void CloseLoopThreadFun(ULONG initial_input)
 			RobotControl->ChasisControl.LoopGyro.SetRef(RobotControl->ChasisControl.TargetVal.ChasisPsaiYaw);
   		RobotControl->ChasisControl.LoopGyro.PID_Cal(INS->Gyro[2]);
 			//双腿都离地
-			if(RobotControl->ChasisControl.ChectLleg_OG()!=0&&RobotControl->ChasisControl.ChectRleg_OG()!=0)
+			if(RobotControl->ChasisControl.CheckOG())
 			{
+				//落地后快速回到 目标状态
+					RobotControl->ChasisControl.Lleg_TargetVal.X[2] = RobotControl->ChasisControl.Lleg_ObserveVal.X[2];
+					RobotControl->ChasisControl.Rleg_TargetVal.X[2] = RobotControl->ChasisControl.Rleg_ObserveVal.X[2];	
 				if(RobotControl->ChasisControl.Get_MoveMode()==Move_Fly)
 				{
-					RobotControl->ChasisControl.SetLegLen(LEG_LEN4);
-					RobotControl->ChasisControl.Set_GravityForward(5.0f);
-					RobotControl->ChasisControl.Set_FlyMid_Flag(1);
 					if(RobotControl->ChasisControl.GetChasisHead()==0)
 					{
-						RobotControl->ChasisControl.Lleg_TargetVal.X[0]=-0.300f;
-						RobotControl->ChasisControl.Rleg_TargetVal.X[0]=-0.300f;
+				  RobotControl->ChasisControl.SetLegLen(LEG_LEN4);		
+				  RobotControl->ChasisControl.Lleg_TargetVal.X[0]=-0.300f;
+					RobotControl->ChasisControl.Rleg_TargetVal.X[0]=-0.300f;
+					RobotControl->ChasisControl.Set_GravityForward(5.0f);
+					RobotControl->ChasisControl.Set_FlyMid_Flag(1);
 					}
 					else if(RobotControl->ChasisControl.GetChasisHead()==1)
 					{
-						RobotControl->ChasisControl.Lleg_TargetVal.X[0]=0.300f;
-						RobotControl->ChasisControl.Rleg_TargetVal.X[0]=0.300f;
+						RobotControl->ChasisControl.SetLegLen(LEG_LEN4);		
+				   RobotControl->ChasisControl.Lleg_TargetVal.X[0]=0.300f;
+					 RobotControl->ChasisControl.Rleg_TargetVal.X[0]=0.300f;
+					RobotControl->ChasisControl.Set_GravityForward(5.0f);
+					RobotControl->ChasisControl.Set_FlyMid_Flag(1);
 					}
 				}
+				else if(RobotControl->ChasisControl.LastJumpMode==JUMP_STRETCH)
+				{		
+				RobotControl->ChasisControl.Lleg_TargetVal.X[0]=0.000f;	
+				RobotControl->ChasisControl.Rleg_TargetVal.X[0]=0.000f;	
+        RobotControl->ChasisControl.Set_GravityForward(71.0f);       					
+				}
 				else
-				{
-						RobotControl->ChasisControl.Lleg_TargetVal.X[0]=0.0f;
-						RobotControl->ChasisControl.Rleg_TargetVal.X[0]=0.0f;
-					  RobotControl->ChasisControl.Set_GravityForward(71.0f);
+				{		
+				RobotControl->ChasisControl.Lleg_TargetVal.X[0]=0.0f;
+				RobotControl->ChasisControl.Rleg_TargetVal.X[0]=0.0f;
+        RobotControl->ChasisControl.Set_GravityForward(25.0f);					
 				}
 			}
-			//有一条腿在地上
+			else if(RobotControl->ChasisControl.CheckOG()==2)
+			{		
+				RobotControl->ChasisControl.Lleg_TargetVal.X[0]=0.3f;	
+				RobotControl->ChasisControl.Rleg_TargetVal.X[0]=0.3f;	
+        RobotControl->ChasisControl.Set_GravityForward(71.0f);       					
+			}
 			else
-			{
+			{	
+				//给左右点击轮加上yaw转向输出
+				//单调 平衡时关掉
 				RobotControl->ChasisControl.Lleg_TargetVal.X[0]=0.0f;
 				RobotControl->ChasisControl.Rleg_TargetVal.X[0]=0.0f;
 				WheelMotor[0] -= RobotControl->ChasisControl.LoopGyro.GetOut();
-				WheelMotor[1] += RobotControl->ChasisControl.LoopGyro.GetOut();		
+				WheelMotor[1] += RobotControl->ChasisControl.LoopGyro.GetOut();
+				RobotControl->ChasisControl.Set_GravityForward(71.0f);
         if(RobotControl->ChasisControl.Get_MoveMode()==Move_Fly)
 				{				
 					RobotControl->ChasisControl.SetLegLen(LEG_LEN2);
@@ -499,20 +460,17 @@ void CloseLoopThreadFun(ULONG initial_input)
 						RobotControl->ChasisControl.SetLegLen(LEG_LEN1);
 					}
 					
-				}				
-			}
-			RobotControl->ChasisControl.Lleg_LQR.RefreshLQRK(RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumLen(),RobotControl->ChasisControl.ChectLleg_OG());
+				}
+			}	
+			RobotControl->ChasisControl.Lleg_LQR.RefreshLQRK(RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumLen(),RobotControl->ChasisControl.CheckOG());
 			RobotControl->ChasisControl.Lleg_LQR.LQRCal(Lleg_Tlqr);			
-			RobotControl->ChasisControl.Rleg_LQR.RefreshLQRK(RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumLen(),RobotControl->ChasisControl.ChectRleg_OG());
+			RobotControl->ChasisControl.Rleg_LQR.RefreshLQRK(RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumLen(),RobotControl->ChasisControl.CheckOG());
 			RobotControl->ChasisControl.Rleg_LQR.LQRCal(Rleg_Tlqr);
 			
 			/*Wheel Banlance*/
 			//调腿长  关掉LQR
 			WheelMotor[0] += Lleg_Tlqr[0];
 			WheelMotor[1] += Rleg_Tlqr[0];
-			
-//			RobotControl->testTorque1[0]=Tlqr[0];
-//			RobotControl->testTorque1[1]=Tlqr[1];
 			
 			/*Theta different control*/   
 			//劈叉环的输入输出
@@ -525,9 +483,6 @@ void CloseLoopThreadFun(ULONG initial_input)
 			/* 速度反馈劈叉环 */
 			RobotControl->ChasisControl.LoopTheta_Spf.SetRef(RobotControl->ChasisControl.LoopTheta_Spf.MAXTHETA);
 			RobotControl->ChasisControl.LoopTheta_Spf.PID_Cal(RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumRadian() - RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumRadian(),-(Leg_Ldot[1]+Leg_Rdot[1]));
-			/* 腿长速度反馈PID计算 */
-			RobotControl->ChasisControl.LoopLen_Spf[0].PID_Cal(RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumLen(),-Leg_Ldot[0]);
-			RobotControl->ChasisControl.LoopLen_Spf[1].PID_Cal(RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumLen(),-Leg_Rdot[0]);
 			/*腿长速度*/
 			
 			/*VMC*/
@@ -543,20 +498,16 @@ void CloseLoopThreadFun(ULONG initial_input)
 			{
 					RobotControl->ChasisControl.LoopLen[0].SetRef(Lentmp[0] + RobotControl->ChasisControl.LoopRoll.GetOut());
 					RobotControl->ChasisControl.LoopLen[1].SetRef(Lentmp[1] - RobotControl->ChasisControl.LoopRoll.GetOut());
-		//			RobotControl->ChasisControl.LoopLen[0].SetRef(Lentmp[0]);
-		//			RobotControl->ChasisControl.LoopLen[1].SetRef(Lentmp[1]);
 					FT_L[0] = -(RobotControl->ChasisControl.LoopLen[0].GetOut());
 					FT_R[0] = -(RobotControl->ChasisControl.LoopLen[1].GetOut());				
 			}
 			//跳跃时 不加腿长速度抑制
-			else if(RobotControl->ChasisControl.ChectLleg_OG()!=0&&RobotControl->ChasisControl.ChectRleg_OG()!=0)
+			else if(RobotControl->ChasisControl.CheckOG()!=0)
 			{	
 					RobotControl->ChasisControl.LoopLen[0].SetRef(Lentmp[0]);
 					RobotControl->ChasisControl.LoopLen[1].SetRef(Lentmp[1]);
 			    FT_L[0] = -(RobotControl->ChasisControl.LoopLen[0].GetOut()+RobotControl->ChasisControl.Get_GravityForward());
-			    FT_R[0] = -(RobotControl->ChasisControl.LoopLen[1].GetOut()+RobotControl->ChasisControl.Get_GravityForward());		
-//			FT_L[0] = -(RobotControl->ChasisControl.LoopLen[0].GetOut());
-//			FT_R[0] = -(RobotControl->ChasisControl.LoopLen[1].GetOut());				
+			    FT_R[0] = -(RobotControl->ChasisControl.LoopLen[1].GetOut()+RobotControl->ChasisControl.Get_GravityForward());					
 			}
 			else
 			{
@@ -564,22 +515,11 @@ void CloseLoopThreadFun(ULONG initial_input)
 			RobotControl->ChasisControl.LoopLen[1].SetRef(Lentmp[1] - RobotControl->ChasisControl.LoopRoll.GetOut());			
 			FT_L[0] = -(RobotControl->ChasisControl.LoopLen[0].GetOut()-RobotControl->ChasisControl.LoopLen_Dot[0].GetOut()+RobotControl->ChasisControl.LoopRollOffset.GetOut()+RobotControl->ChasisControl.Get_GravityForward());
 			FT_R[0] = -(RobotControl->ChasisControl.LoopLen[1].GetOut()+RobotControl->ChasisControl.LoopLen_Dot[1].GetOut()-RobotControl->ChasisControl.LoopRollOffset.GetOut()+RobotControl->ChasisControl.Get_GravityForward());
-//			FT_L[0] = -(RobotControl->ChasisControl.LoopLen[0].GetOut()-RobotControl->ChasisControl.LoopLen_Dot[0].GetOut());
-//			FT_R[0] = -(RobotControl->ChasisControl.LoopLen[1].GetOut()+RobotControl->ChasisControl.LoopLen_Dot[1].GetOut());
 			}
 			//劈叉环
 			/*Torque*/
-//			FT_L[1] =  Tlqr[1] + RobotControl->ChasisControl.LoopTheta.GetOut();
-//			FT_R[1] =  Tlqr[1] - RobotControl->ChasisControl.LoopTheta.GetOut();
-//			FT_L[1] =  Tlqr[1];
-//			FT_R[1] =  Tlqr[1] ;
-			//单调劈叉环
-//			FT_L[1] = RobotControl->ChasisControl.LoopTheta.GetOut();
-//			FT_R[1] = -RobotControl->ChasisControl.LoopTheta.GetOut();
 			FT_L[1] =Lleg_Tlqr[1]+RobotControl->ChasisControl.LoopTheta_Spf.GetOut();
-			FT_R[1] =Rleg_Tlqr[1]-RobotControl->ChasisControl.LoopTheta_Spf.GetOut();		
-//			FT_L[1] =RobotControl->ChasisControl.LoopTheta_Spf.GetOut();
-//			FT_R[1] =-RobotControl->ChasisControl.LoopTheta_Spf.GetOut();				
+			FT_R[1] =Rleg_Tlqr[1]-RobotControl->ChasisControl.LoopTheta_Spf.GetOut();					
 			/*Torque*/
 			//小陀螺需要闭环 将闭环结果以相反符号添加到 FT上
 			RobotControl->ChasisControl.MotorUnits->LinkSolver[0].VMCCal(FT_L,TorqueL);
@@ -618,10 +558,7 @@ void CloseLoopThreadFun(ULONG initial_input)
 			R_T[0]=RobotControl->ChasisControl.MotorUnits->LEGMotor[2].GetToqReal();
 			R_T[1]=RobotControl->ChasisControl.MotorUnits->LEGMotor[3].GetToqReal();
 			L_T[0]=RobotControl->ChasisControl.MotorUnits->LEGMotor[0].GetToqReal();
-			L_T[1]=RobotControl->ChasisControl.MotorUnits->LEGMotor[1].GetToqReal();
-		
-			
-			
+			L_T[1]=RobotControl->ChasisControl.MotorUnits->LEGMotor[1].GetToqReal();	
 		}
 		tx_thread_sleep_until(&timer,2);
 	}

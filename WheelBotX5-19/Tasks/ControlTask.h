@@ -315,8 +315,7 @@ class cChasisControl
 	}
 /********** Chasis moving **********/
 	protected:
-	uint8_t Lleg_OG = 0;
-	uint8_t Rleg_OG = 0;
+	uint8_t OffGround;
 	public:
 	cMotorUnit *MotorUnits;
 	cVelFusionKF *VelKF;
@@ -368,10 +367,13 @@ class cChasisControl
 	
 	float ChasisForwardTargetVelocity=0.0f;	
 	float Greavity_Forward=71.0f;
-	float Check_OG_Value=40.0f;
+	float Check_OG_Value=20.0f;
 	uint8_t JumpFlag;
 	uint8_t MoveMode;
 	uint8_t Move_Mid=0;
+	uint8_t	Over_Flag=0;
+	uint8_t Can_Jump_Flag=0;
+	uint8_t	Jump_One_Flag=0;	
 	/*Get Forward velocity*/
 	float GetForwardVelocity(void)
 	{
@@ -385,21 +387,13 @@ class cChasisControl
 		}
 		else{return this->ChasisHead?-ChasisForwardTargetVelocity:ChasisForwardTargetVelocity;}	
 	}
-	uint8_t ChectLleg_OG(void)
+	uint8_t CheckOG(void)
 	{
-		return this->Lleg_OG;
+		return this->OffGround;
 	}
-	uint8_t ChectRleg_OG(void)
+	void SetOG(uint8_t OG)
 	{
-		return this->Rleg_OG;
-	}
-	void SetLleg_OG(uint8_t OG)
-	{
-		this->Lleg_OG = OG;
-	}
-	void SetRleg_OG(uint8_t OG)
-	{
-		this->Rleg_OG = OG;
+		this->OffGround = OG;
 	}
 	
 /********** Chassis Jump **********/
@@ -605,7 +599,31 @@ public:
 	{
 	return	this->Move_Mid;
 	}
+	void Set_Jump_One_Flag(uint8_t Jump_One_Flagx)
+	{
+		this->Jump_One_Flag=Jump_One_Flagx;
+	}
+			void Set_Can_Jump_Flag(uint8_t Can_Jump_Flagx)
+	{
+		this->Can_Jump_Flag=Can_Jump_Flagx;
+	}
+	 void Set_JumpOver_Flag(uint8_t Over_Flagx)
+	{
+		this->Over_Flag=Over_Flagx;
+	}
 	
+	uint8_t Get_JumpOver_Flag(void)
+	{
+	return	this->Over_Flag;
+	}
+	uint8_t Get_Can_Jump_Flag(void)
+	{
+	return	this->Can_Jump_Flag;
+	}
+	uint8_t Get_Jump_One_Flag(void)
+	{
+	return	this->Jump_One_Flag;
+	}	
 /********** Loop ROLL **********/
 	public:
 	cLoopRoll LoopRoll;

@@ -1,2 +1,15 @@
-%test(0.15)
-
+test(0.20)
+poly_coeff = fit_k_matrix();
+fprintf('\tLQR_para[0]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(1,1,1),poly_coeff(1,1,2),poly_coeff(1,1,3),poly_coeff(1,1,4))
+fprintf('\tLQR_para[1]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(1,2,1),poly_coeff(1,2,2),poly_coeff(1,2,3),poly_coeff(1,2,4))
+fprintf('\tLQR_para[2]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(1,3,1),poly_coeff(1,3,2),poly_coeff(1,3,3),poly_coeff(1,3,4))
+fprintf('\tLQR_para[3]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(1,4,1),poly_coeff(1,4,2),poly_coeff(1,4,3),poly_coeff(1,4,4))
+fprintf('\tLQR_para[4]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(1,5,1),poly_coeff(1,5,2),poly_coeff(1,5,3),poly_coeff(1,5,4))
+fprintf('\tLQR_para[5]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(1,6,1),poly_coeff(1,6,2),poly_coeff(1,6,3),poly_coeff(1,6,4))
+fprintf('\n')
+fprintf('\tLQR_para[6]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(2,1,1),poly_coeff(2,1,2),poly_coeff(2,1,3),poly_coeff(2,1,4))
+fprintf('\tLQR_para[7]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(2,2,1),poly_coeff(2,2,2),poly_coeff(2,2,3),poly_coeff(2,2,4))
+fprintf('\tLQR_para[8]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(2,3,1),poly_coeff(2,3,2),poly_coeff(2,3,3),poly_coeff(2,3,4))
+fprintf('\tLQR_para[9]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(2,4,1),poly_coeff(2,4,2),poly_coeff(2,4,3),poly_coeff(2,4,4))
+fprintf('\tLQR_para[10]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(2,5,1),poly_coeff(2,5,2),poly_coeff(2,5,3),poly_coeff(2,5,4))
+fprintf('\tLQR_para[11]=%8.6f*L_3%+8.6f*L_2%+8.6f*L_1%+8.6f;\n',poly_coeff(2,6,1),poly_coeff(2,6,2),poly_coeff(2,6,3),poly_coeff(2,6,4))

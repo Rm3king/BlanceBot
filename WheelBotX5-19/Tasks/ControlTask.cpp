@@ -366,7 +366,7 @@ void RoboCTRThreadFun(ULONG initial_input)
 				
 				if(RobotControl->ChasisControl.Get_MoveMode()==Move_Fly)  
 				{
-				  RobotControl->ChasisControl.Set_CheckOG_Value(40.0f);
+				  RobotControl->ChasisControl.Set_CheckOG_Value(35.0f);
 					RobotControl->ChasisControl.LoopLen[0].Set_Kp(400);
 					RobotControl->ChasisControl.LoopLen[0].Set_Kd(2000);
 					RobotControl->ChasisControl.LoopLen[1].Set_Kp(400);
@@ -376,7 +376,7 @@ void RoboCTRThreadFun(ULONG initial_input)
 				}
 				if(RobotControl->ChasisControl.Get_MoveMode()==Move_Normal)  
 				{
-				  RobotControl->ChasisControl.Set_CheckOG_Value(40.0f);
+				  RobotControl->ChasisControl.Set_CheckOG_Value(35.0f);
 					RobotControl->ChasisControl.LoopLen[0].Set_Kp(400);
 					RobotControl->ChasisControl.LoopLen[0].Set_Kd(800);
 					RobotControl->ChasisControl.LoopLen[1].Set_Kp(400);
@@ -394,8 +394,9 @@ void RoboCTRThreadFun(ULONG initial_input)
 							RobotControl->ChasisControl.SetChasisMode(ROBOTPART_CHASIS_JUMP);
 							RobotControl->ChasisControl.SetJumpMode(JUMP_STOP);
 							RobotControl->ChasisControl.LastJumpMode=JUMP_STOP;
-							RobotControl->ChasisControl.Set_CheckOG_Value(40.0f);
+							RobotControl->ChasisControl.Set_CheckOG_Value(35.0f);
 							RobotControl->ChasisControl.Set_JumpFlag(1);
+							RobotControl->ChasisControl.Set_JumpOver_Flag(1);
 //							}
 //							else
 //							{
@@ -645,27 +646,7 @@ void RoboCTRThreadFun(ULONG initial_input)
 					else if(RobotControl->ChasisControl.GetChasisMode()==ROBOTPART_CHASIS_JUMP)
 					{
 						float lentmp=RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumLen();
-//						if(Msg_Remoter->RC_Data->rmt.SW2==2)
-//						{RobotControl->ChasisControl.SetChasisMode(ROBOTPART_CHASIS_SHUTTLE);}
-						//if(Msg_Remoter->RC_Data->rmt.SW2==1 && RobotControl->ChasisControl.LastJumpMode==JUMP_STOP && LastSW2!=1 && lentmp >0.22f)//0.18
-						if(RobotControl->ChasisControl.Get_MoveMode()==Move_Jump && RobotControl->ChasisControl.LastJumpMode==JUMP_STOP&& lentmp >0.20f)//0.18
-						{
-							RobotControl->ChasisControl.LoopLen[0].Reset();
-							RobotControl->ChasisControl.LoopLen[1].Reset();
-							RobotControl->ChasisControl.LoopLen_Dot[0].Reset();
-							RobotControl->ChasisControl.LoopLen_Dot[1].Reset();
-							RobotControl->ChasisControl.LastJumpMode=JUMP_READY;
-							RobotControl->ChasisControl.SetLegLen((eRobotLegID)0);
-		//					RobotControl->ChasisControl.SetOG(0);
-//							RobotControl->ChasisControl.LoopLen[0].Set_Kp(400);
-//							RobotControl->ChasisControl.LoopLen[0].Set_Kd(2000);
-//							RobotControl->ChasisControl.LoopLen[1].Set_Kp(400);
-//							RobotControl->ChasisControl.LoopLen[1].Set_Kd(2000);
-					RobotControl->ChasisControl.LoopLen_Dot[0].Set_Kp(0.1f);
-					RobotControl->ChasisControl.LoopLen_Dot[1].Set_Kp(0.1f);
-						}
-						//else if(Msg_Remoter->RC_Data->rmt.SW2==1 && RobotControl->ChasisControl.LastJumpMode==JUMP_READY && lentmp <=0.19f)//0.18
-						else if(RobotControl->ChasisControl.Get_MoveMode()==Move_Jump && RobotControl->ChasisControl.LastJumpMode==JUMP_READY && lentmp <=0.20f)//0.18
+						if(RobotControl->ChasisControl.Get_MoveMode()==Move_Jump && RobotControl->ChasisControl.LastJumpMode==JUMP_STOP && lentmp >0.20f&&RobotControl->ChasisControl.Get_Jump_One_Flag()==0)//0.18
 						{
 							RobotControl->ChasisControl.LastJumpMode=JUMP_STRETCH;
 							RobotControl->ChasisControl.SetLegLen((eRobotLegID)6);
@@ -674,14 +655,16 @@ void RoboCTRThreadFun(ULONG initial_input)
 							RobotControl->ChasisControl.LoopLen[1].Reset();
 							RobotControl->ChasisControl.LoopLen_Dot[0].Reset();
 							RobotControl->ChasisControl.LoopLen_Dot[1].Reset();
-							RobotControl->ChasisControl.LoopLen[0].Set_Kp(1800);
-							RobotControl->ChasisControl.LoopLen[0].Set_Kd(2000);
-							RobotControl->ChasisControl.LoopLen[1].Set_Kp(1800);
-							RobotControl->ChasisControl.LoopLen[1].Set_Kd(2000);
-					RobotControl->ChasisControl.LoopLen_Dot[0].Set_Kp(0.1f);
-					RobotControl->ChasisControl.LoopLen_Dot[1].Set_Kp(0.1f);
+							RobotControl->ChasisControl.LoopLen[0].Set_Kp(2500);
+							RobotControl->ChasisControl.LoopLen[0].Set_Kd(1000);
+							RobotControl->ChasisControl.LoopLen[1].Set_Kp(2500);
+							RobotControl->ChasisControl.LoopLen[1].Set_Kd(1000);
+					RobotControl->ChasisControl.LoopLen_Dot[0].Set_Kp(0.0f);
+					RobotControl->ChasisControl.LoopLen_Dot[1].Set_Kp(0.0f);
+							RobotControl->ChasisControl.Set_GravityForward(200.0f);
+							RobotControl->ChasisControl.Set_Jump_One_Flag(1);
 						}
-						else if(RobotControl->ChasisControl.Get_MoveMode()==Move_Jump&& RobotControl->ChasisControl.LastJumpMode==JUMP_STRETCH && lentmp>0.26f)//0.36
+						else if(RobotControl->ChasisControl.Get_MoveMode()==Move_Jump&& RobotControl->ChasisControl.LastJumpMode==JUMP_STRETCH && lentmp>0.31f)//0.36
 						//else if(RobotControl->ChasisControl.Get_JumpFlag()==1 && RobotControl->ChasisControl.LastJumpMode==JUMP_STRETCH && lentmp>0.26f)//0.36
 						{
 							RobotControl->ChasisControl.LastJumpMode=JUMP_SHRINK;
@@ -690,18 +673,19 @@ void RoboCTRThreadFun(ULONG initial_input)
 							RobotControl->ChasisControl.LoopLen[1].Reset();
 							RobotControl->ChasisControl.LoopLen_Dot[0].Reset();
 							RobotControl->ChasisControl.LoopLen_Dot[1].Reset();
-							RobotControl->ChasisControl.LoopLen[0].Set_Kp(1100);
-							RobotControl->ChasisControl.LoopLen[0].Set_Kd(2000);
-							RobotControl->ChasisControl.LoopLen[1].Set_Kp(1100);
-							RobotControl->ChasisControl.LoopLen[1].Set_Kd(2000);
-					RobotControl->ChasisControl.LoopLen_Dot[0].Set_Kp(1.0f);
-					RobotControl->ChasisControl.LoopLen_Dot[1].Set_Kp(1.0f);
+							RobotControl->ChasisControl.LoopLen[0].Set_Kp(2500);
+							RobotControl->ChasisControl.LoopLen[0].Set_Kd(500);
+							RobotControl->ChasisControl.LoopLen[1].Set_Kp(2500);
+							RobotControl->ChasisControl.LoopLen[1].Set_Kd(500);
+					RobotControl->ChasisControl.LoopLen_Dot[0].Set_Kp(0.0f);
+					RobotControl->ChasisControl.LoopLen_Dot[1].Set_Kp(0.0f);
+							RobotControl->ChasisControl.Set_GravityForward(5.0f);
 //							RobotControl->ChasisControl.SetOG(1);
 						}
 //						else if(Msg_Remoter->RC_Data->rmt.SW2==1 && RobotControl->ChasisControl.LastJumpMode==JUMP_SHRINK && lentmp<0.18f)//0.18
 						else if(RobotControl->ChasisControl.Get_MoveMode()==Move_Jump && RobotControl->ChasisControl.LastJumpMode==JUMP_SHRINK && lentmp<0.18f)//0.18
 						{
-							RobotControl->ChasisControl.LastJumpMode=JUMP_STOP;
+								RobotControl->ChasisControl.LastJumpMode=JUMP_STOP;
 							RobotControl->ChasisControl.SetLegLen((eRobotLegID)3);
 							RobotControl->ChasisControl.LoopLen[0].Reset();
 							RobotControl->ChasisControl.LoopLen[1].Reset();
@@ -711,9 +695,10 @@ void RoboCTRThreadFun(ULONG initial_input)
 							RobotControl->ChasisControl.LoopLen[0].Set_Kd(1200);
 							RobotControl->ChasisControl.LoopLen[1].Set_Kp(400);
 							RobotControl->ChasisControl.LoopLen[1].Set_Kd(1200);
+					    RobotControl->ChasisControl.LoopLen_Dot[0].Set_Kp(1.0f);
+					    RobotControl->ChasisControl.LoopLen_Dot[1].Set_Kp(1.0f);
+							RobotControl->ChasisControl.Set_GravityForward(5.0f);
 							//RobotControl->ChasisControl.SetOG(1);
-					RobotControl->ChasisControl.LoopLen_Dot[0].Set_Kp(1.0f);
-					RobotControl->ChasisControl.LoopLen_Dot[1].Set_Kp(1.0f);
 						}
 			//			else if(Msg_Remoter->RC_Data->rmt.SW2==1 && RobotControl->ChasisControl.LastJumpMode==JUMP_STOP && lentmp<0.25f && RobotControl->ChasisControl.CheckLand())
 							else if(RobotControl->ChasisControl.Get_MoveMode()==Move_Jump&& RobotControl->ChasisControl.LastJumpMode==JUMP_STOP && lentmp<0.29f && RobotControl->ChasisControl.CheckLand())
@@ -732,11 +717,16 @@ void RoboCTRThreadFun(ULONG initial_input)
 							//RobotControl->ChasisControl.SetOG(0);
 					RobotControl->ChasisControl.LoopLen_Dot[0].Set_Kp(1.0f);
 					RobotControl->ChasisControl.LoopLen_Dot[1].Set_Kp(1.0f);
-							RobotControl->ChasisControl.Set_JumpFlag(0);
+							RobotControl->ChasisControl.Set_GravityForward(71.0f);
+//							RobotControl->ChasisControl.Set_JumpFlag(0);
 							RobotControl->ChasisControl.Set_MoveMode(Move_Normal);
+							RobotControl->ChasisControl.Set_JumpFlag(2);
+							RobotControl->ChasisControl.Set_Can_Jump_Flag(0);
+							
+
 						}
 						LastSW2=Msg_Remoter->RC_Data->rmt.SW2;
-				    LastKey_V =Msg_Remoter->RC_Data->key.V;
+						LastKey_V =Msg_Remoter->RC_Data->key.V;
 						jump_count=0;
 					}
 					else if(RobotControl->ChasisControl.GetChasisMode()==ROBOTPART_CHASIS_ROLLING)
