@@ -384,9 +384,10 @@ void RoboCTRThreadFun(ULONG initial_input)
 					RobotControl->ChasisControl.LoopLen_Dot[0].Set_Kp(0.5f);
 					RobotControl->ChasisControl.LoopLen_Dot[1].Set_Kp(0.5f);
 				}
-				if(Msg_Remoter->RC_Data->key.V == 1)
+				if(Msg_Remoter->RC_Data->key.V == 1&&RobotControl->ChasisControl.Get_MoveMode()==Move_Normal)//&&RobotControl->ChasisControl.Get_Can_Jump_Flag()==1//&&RobotControl->ChasisControl.Get_Jump_One_Flag()==0
 				{
 					RobotControl->ChasisControl.Set_MoveMode(Move_Jump);
+					RobotControl->ChasisControl.Set_Jump_One_Flag(0);
 				}
 				if(RobotControl->ChasisControl.Get_MoveMode()==Move_Jump)
 						{

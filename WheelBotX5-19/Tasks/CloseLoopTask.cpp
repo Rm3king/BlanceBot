@@ -315,22 +315,22 @@ void CloseLoopThreadFun(ULONG initial_input)
 				RobotControl->ChasisControl.MotorUnits->LinkSolver[1].VMCRevCal(FT_R_Real,TorqueR_Real);
 				/* 腿长加速度计算 */
 				static float LastL_lendot,LastR_lendot,LastL_Thetadot,LastR_Thetadot;
-				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel = 0.2*RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel+400.0f*(RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot-LastL_lendot);
-				LastL_lendot = RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot;
-				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel = 0.2*RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel+400.0f*(RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot-LastR_lendot);
-				LastR_lendot = RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot;	
-				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel = 0.2*RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel+400.0f*(RobotControl->ChasisControl.Lleg_ObserveVal.X[1]-LastL_Thetadot);
-				LastL_Thetadot = RobotControl->ChasisControl.Lleg_ObserveVal.X[1];
-				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel = 0.2*RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel+400.0f*(RobotControl->ChasisControl.Rleg_ObserveVal.X[1]-LastR_Thetadot);
-				LastR_Thetadot = RobotControl->ChasisControl.Rleg_ObserveVal.X[1];
-//			  RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel = RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot-LastL_lendot;
+//				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel = 0.2*RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel+400.0f*(RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot-LastL_lendot);
 //				LastL_lendot = RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot;
-//				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel = RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot-LastR_lendot;
+//				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel = 0.2*RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel+400.0f*(RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot-LastR_lendot);
 //				LastR_lendot = RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot;	
-//				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel = RobotControl->ChasisControl.Lleg_ObserveVal.X[1]-LastL_Thetadot;
+//				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel = 0.2*RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel+400.0f*(RobotControl->ChasisControl.Lleg_ObserveVal.X[1]-LastL_Thetadot);
 //				LastL_Thetadot = RobotControl->ChasisControl.Lleg_ObserveVal.X[1];
-//				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel = RobotControl->ChasisControl.Rleg_ObserveVal.X[1]-LastR_Thetadot;
+//				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel = 0.2*RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel+400.0f*(RobotControl->ChasisControl.Rleg_ObserveVal.X[1]-LastR_Thetadot);
 //				LastR_Thetadot = RobotControl->ChasisControl.Rleg_ObserveVal.X[1];
+			  RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenAccel = RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot-LastL_lendot;
+				LastL_lendot = RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot;
+				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenAccel = RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot-LastR_lendot;
+				LastR_lendot = RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot;	
+				RobotControl->ChasisControl.Lleg_ObserveVal.ChasisThetaAccel = RobotControl->ChasisControl.Lleg_ObserveVal.X[1]-LastL_Thetadot;
+				LastL_Thetadot = RobotControl->ChasisControl.Lleg_ObserveVal.X[1];
+				RobotControl->ChasisControl.Rleg_ObserveVal.ChasisThetaAccel = RobotControl->ChasisControl.Rleg_ObserveVal.X[1]-LastR_Thetadot;
+				LastR_Thetadot = RobotControl->ChasisControl.Rleg_ObserveVal.X[1];
 				volatile float P_L = FT_L_Real[0]*arm_cos_f32(RobotControl->ChasisControl.Lleg_ObserveVal.X[0])+FT_L_Real[1]*arm_sin_f32(RobotControl->ChasisControl.Lleg_ObserveVal.X[0])/RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumLen();
 				volatile float P_R = FT_R_Real[0]*arm_cos_f32(RobotControl->ChasisControl.Rleg_ObserveVal.X[0])+FT_R_Real[1]*arm_sin_f32(RobotControl->ChasisControl.Rleg_ObserveVal.X[0])/RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumLen();
 				volatile float Zw_L = 
@@ -360,6 +360,14 @@ void CloseLoopThreadFun(ULONG initial_input)
 				else
 				{
 					RobotControl->ChasisControl.SetOG(0);
+				}
+				if((RobotControl->ChasisControl.Lleg_ObserveVal.ChasisFn+RobotControl->ChasisControl.Rleg_ObserveVal.ChasisFn)>80.0f)
+				{
+					RobotControl->ChasisControl.SetLand(1);
+				}
+				else
+				{
+					RobotControl->ChasisControl.SetLand(0);
 				}
 			}
 			/*Fall out dectection*/
@@ -512,7 +520,7 @@ void CloseLoopThreadFun(ULONG initial_input)
 			else
 			{
 			RobotControl->ChasisControl.LoopLen[0].SetRef(Lentmp[0] + RobotControl->ChasisControl.LoopRoll.GetOut());
-			RobotControl->ChasisControl.LoopLen[1].SetRef(Lentmp[1] - RobotControl->ChasisControl.LoopRoll.GetOut());			
+			RobotControl->ChasisControl.LoopLen[1].SetRef(Lentmp[1] - RobotControl->ChasisControl.LoopRoll.GetOut());		
 			FT_L[0] = -(RobotControl->ChasisControl.LoopLen[0].GetOut()-RobotControl->ChasisControl.LoopLen_Dot[0].GetOut()+RobotControl->ChasisControl.LoopRollOffset.GetOut()+RobotControl->ChasisControl.Get_GravityForward());
 			FT_R[0] = -(RobotControl->ChasisControl.LoopLen[1].GetOut()+RobotControl->ChasisControl.LoopLen_Dot[1].GetOut()-RobotControl->ChasisControl.LoopRollOffset.GetOut()+RobotControl->ChasisControl.Get_GravityForward());
 			}
