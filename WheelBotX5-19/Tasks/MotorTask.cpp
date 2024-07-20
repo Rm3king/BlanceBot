@@ -307,9 +307,11 @@ void USART2_IRQHandler(void)
 void cMotorUnit::UpdateLink(void)
 {
 //	#warning "DEBUGHERE"//Ç°ºó
-	this->LinkSolver[0].InputLink(this->LEGMotor[0].GetRadian(), this->LEGMotor[1].GetRadian());
-	//this->LinkSolver[0].InputLink(0.087f, 3.054f);
-	this->LinkSolver[1].InputLink(this->LEGMotor[2].GetRadian(), this->LEGMotor[3].GetRadian());
+//	this->LinkSolver[0].InputLink(this->LEGMotor[0].GetRadian(), this->LEGMotor[1].GetRadian());
+//	//this->LinkSolver[0].InputLink(0.087f, 3.054f);
+//	this->LinkSolver[1].InputLink(this->LEGMotor[2].GetRadian(), this->LEGMotor[3].GetRadian());
+	this->LinkSolver[0].InputLink(this->LEGMotor[0].GetRadian(), this->LEGMotor[1].GetRadian(),this->LEGMotor[0].GetVelocity(),this->LEGMotor[1].GetVelocity());
+	this->LinkSolver[1].InputLink(this->LEGMotor[2].GetRadian(), this->LEGMotor[3].GetRadian(),this->LEGMotor[2].GetVelocity(),this->LEGMotor[3].GetVelocity());
 	this->LinkSolver[0].Resolve();
 	this->LinkSolver[1].Resolve();
 }

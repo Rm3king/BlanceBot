@@ -88,8 +88,8 @@ class cMG8016 : public cMotor
 class cKF9025 : public cMotor
 {
 	protected:
-	float KWheelD = 0.160f * PI / 360.0f;	//轮直径 * PI / 360
-	float Speed = 0.0f;		//轮线速度
+	float KWheelD = PI / 180.0f;	//轮直径 * PI / 360
+	float Speed = 0.0f;		//轮角速度
 	float Radian	 = 0.0f;
 	uint16_t LastAng=0;
 	public:
@@ -146,11 +146,11 @@ class cDM8006 : public cDMMotor
 	
 	/*限位导致的置零校准值  5 degree安装夹角*/
 	//float	 LimitOffset = 0.08726646f;
-	float	 LimitOffset = 0.00296705f;
+	float	 LimitOffset = -0.26f;
 	
 	/*校正后的弧度制, X正向为车头 ,Y正向竖直向下 ,Z箭矢向左 ,左右侧车轮都这样*/
 	float 	 Radian	 = 0.0f;
-	
+	float    Velocity = 0.0f;
 	
 	public:
 	/*通讯丢包计数*/
@@ -176,15 +176,26 @@ class cDM8006 : public cDMMotor
 		else if(tmp>2*PI){tmp = tmp - 2*PI;}
 		else {tmp = tmp;}
 		this->Radian=tmp;
+		float vel = this->cDMMotor::GetVelocity();
+		/* 右侧翻转电机 */
+		if(!this->MotorMode[0])
+		{
+			vel = -vel;
+		}
+		this->Velocity = vel;
 	}
 	
 	inline float GetRadian(void)
 	{return this->Radian;}
-	/*[0]表示左右 0左1右*/
+	inline float GetVelocity(void)
+	{
+		return this->Velocity;
+	}
+	/*[0]表示左右 1左0右*/
 	/*[1]表示前后 0前1后*/
 	void SetMotorMode(uint8_t Para0, uint8_t Para1)
 	{this->MotorMode[0]=Para0;this->MotorMode[1]=Para1;}
-};
+}; 
 
 class cMotorUnit
 {

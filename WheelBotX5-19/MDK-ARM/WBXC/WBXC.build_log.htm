@@ -27,6 +27,20 @@ Project File Date:  07/04/2024
 <h2>Output:</h2>
 *** Using Compiler 'V6.19', folder: 'D:\robomaster\Electronic_Control_Packages_2023\keil\ARM\ARMCLANG\Bin'
 Build target 'WBXC'
+../Tasks/MotorTask.cpp(1): warning: In file included from...
+../Tasks/MotorTask.h(4): warning: In file included from...
+../Core/Inc\main.h(32): warning: In file included from...
+../Drivers/STM32H7xx_HAL_Driver/Inc\stm32h7xx_ll_dma.h(1620): warning: 'register' storage class specifier is deprecated and incompatible with C++17 [-Wdeprecated-register]
+  register uint32_t dma_base_addr = (uint32_t)DMAx;
+  ^~~~~~~~~
+1 warning generated.
+compiling MotorTask.cpp...
+linking...
+..\ModuleDrivers\DL_H750.sct(18): warning: L6314W: No section matches pattern *(.RAM_D1).
+..\ModuleDrivers\DL_H750.sct(27): warning: L6314W: No section matches pattern *(.RAM_D3).
+Program Size: Code=112372 RO-data=5284 RW-data=20920 ZI-data=28692  
+Finished: 0 information, 2 warning and 0 error messages.
+FromELF: creating hex file...
 After Build - User command #1: D:\robomaster\WheelBotLite-WBLBackPack\code\WheelBotX7-2\WheelBotX5-19\MDK-ARM\Keil5_disp_size_bar_v0.4.exe
 [Keil5_disp_size_bar V0.4]: find project satrt!
 [Keil5_disp_size_bar V0.4]: Found file: .//WBXC.uvprojx
@@ -35,14 +49,14 @@ After Build - User command #1: D:\robomaster\WheelBotLite-WBLBackPack\code\Wheel
 [Keil5_disp_size_bar V0.4]: Found file: .//WBXC/WBXC.map
 [Keil5_disp_size_bar V0.4]: map file read end
 ram:
-  127 KB   ram1:|¡ö¡ö¡ö¡ö¡ö_______________| 25.40 % (   32.26 KB /   127.00 KB) [97016 B]
+  127 KB   ram1:|¡ö¡ö¡ö¡ö¡ö_______________| 25.44 % (   32.30 KB /   127.00 KB) [96968 B]
   512 KB   ram2:|____________________|  0.00 % (    0.00 KB /   512.00 KB) [524288 B]
   288 KB   ram3:|¡ö___________________|  5.61 % (   16.14 KB /   288.00 KB) [278380 B]
    64 KB   ram4:|____________________|  0.00 % (    0.00 KB /    64.00 KB) [65536 B]
 flash:
- 2048 KB flash1:|¡ö___________________|  5.58 % (  114.37 KB /  2048.00 KB) [1980040 B]
+ 2048 KB flash1:|¡ö___________________|  5.61 % (  114.90 KB /  2048.00 KB) [1979496 B]
  
-"WBXC\WBXC.axf" - 0 Error(s), 0 Warning(s).
+"WBXC\WBXC.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -76,41 +90,41 @@ Package Vendor: Keil
       Include file:  CMSIS/Core/Include/tz_context.h
 
    * Component: ARM::CMSIS:DSP:Source:1.14.2
-      Source file:   Source/FilteringFunctions/FilteringFunctions.c
-      Source file:   Source/StatisticsFunctions/StatisticsFunctions.c
-      Source file:   Source/SupportFunctions/SupportFunctions.c
-      Source file:   Source/SVMFunctions/SVMFunctions.c
-      Source file:   Source/TransformFunctions/TransformFunctions.c
       Source file:   Source/InterpolationFunctions/InterpolationFunctions.c
-      Include file:  Include/arm_const_structs.h
-      Source file:   Source/BasicMathFunctions/BasicMathFunctionsF16.c
-      Source file:   Source/MatrixFunctions/MatrixFunctions.c
-      Include file:  Include/arm_math_f16.h
-      Source file:   Source/BayesFunctions/BayesFunctions.c
-      Source file:   Source/ComplexMathFunctions/ComplexMathFunctions.c
-      Source file:   Source/DistanceFunctions/DistanceFunctions.c
-      Source file:   Source/FastMathFunctions/FastMathFunctions.c
       Include file:  Include/arm_math.h
-      Include file:  Include/arm_const_structs_f16.h
+      Include file:  Include/arm_common_tables.h
+      Source file:   Source/BayesFunctions/BayesFunctions.c
+      Source file:   Source/DistanceFunctions/DistanceFunctions.c
+      Source file:   Source/SupportFunctions/SupportFunctions.c
       Include file:  Include/arm_common_tables_f16.h
+      Include file:  Include/arm_const_structs_f16.h
       Source file:   Source/BasicMathFunctions/BasicMathFunctions.c
+      Include file:  Include/arm_const_structs.h
       Source file:   Source/QuaternionMathFunctions/QuaternionMathFunctions.c
       Source file:   Source/CommonTables/CommonTables.c
+      Include file:  Include/arm_math_f16.h
+      Source file:   Source/ComplexMathFunctions/ComplexMathFunctions.c
       Source file:   Source/ControllerFunctions/ControllerFunctions.c
-      Include file:  Include/arm_common_tables.h
-      Source file:   Source/MatrixFunctions/MatrixFunctionsF16.c
-      Source file:   Source/FastMathFunctions/FastMathFunctionsF16.c
-      Source file:   Source/BayesFunctions/BayesFunctionsF16.c
-      Source file:   Source/TransformFunctions/TransformFunctionsF16.c
-      Source file:   Source/StatisticsFunctions/StatisticsFunctionsF16.c
-      Source file:   Source/SupportFunctions/SupportFunctionsF16.c
-      Source file:   Source/ComplexMathFunctions/ComplexMathFunctionsF16.c
-      Source file:   Source/FilteringFunctions/FilteringFunctionsF16.c
+      Source file:   Source/FastMathFunctions/FastMathFunctions.c
+      Source file:   Source/FilteringFunctions/FilteringFunctions.c
+      Source file:   Source/MatrixFunctions/MatrixFunctions.c
+      Source file:   Source/StatisticsFunctions/StatisticsFunctions.c
+      Source file:   Source/SVMFunctions/SVMFunctions.c
+      Source file:   Source/TransformFunctions/TransformFunctions.c
       Source file:   Source/DistanceFunctions/DistanceFunctionsF16.c
+      Source file:   Source/BayesFunctions/BayesFunctionsF16.c
+      Source file:   Source/FastMathFunctions/FastMathFunctionsF16.c
+      Source file:   Source/StatisticsFunctions/StatisticsFunctionsF16.c
+      Source file:   Source/BasicMathFunctions/BasicMathFunctionsF16.c
+      Source file:   Source/ComplexMathFunctions/ComplexMathFunctionsF16.c
+      Source file:   Source/TransformFunctions/TransformFunctionsF16.c
       Source file:   Source/InterpolationFunctions/InterpolationFunctionsF16.c
-      Source file:   Source/CommonTables/CommonTablesF16.c
       Source file:   Source/SVMFunctions/SVMFunctionsF16.c
-Build Time Elapsed:  00:00:03
+      Source file:   Source/SupportFunctions/SupportFunctionsF16.c
+      Source file:   Source/CommonTables/CommonTablesF16.c
+      Source file:   Source/MatrixFunctions/MatrixFunctionsF16.c
+      Source file:   Source/FilteringFunctions/FilteringFunctionsF16.c
+Build Time Elapsed:  00:00:06
 </pre>
 </body>
 </html>

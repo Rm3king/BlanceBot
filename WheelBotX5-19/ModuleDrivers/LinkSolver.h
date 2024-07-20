@@ -30,7 +30,12 @@ class cLinkSolver
 	/*关节电机弧度*/
 	float Theta2 = 0.0f;
 	float Theta3 = 0.0f;
-	
+	/*关节电机旋转角速度*/
+	float w1;
+	float w4;
+	/* 五连杆从动杆相对于机体角速度 */
+	float w2 = 0.0f;
+	float w3 = 0.0f;
 	/*极限值*/
 	float Theta2Min = PI/2;
 	float Theta3Max = PI/2;
@@ -64,7 +69,7 @@ class cLinkSolver
 		this->Theta2Min = Theta2Min;
 	}
 	
-	uint8_t	InputLink(float Theta3, float Theta2);
+	uint8_t	InputLink(float Theta3, float Theta2,float w1,float w4);
 	
 	inline uint8_t GetLinkStatue(void)
 	{return (uint8_t)this->LinkStatue;}
@@ -74,7 +79,14 @@ class cLinkSolver
 	
 	inline float GetPendulumRadian(void)
 	{return PendulumRadian;}
-	
+	inline float Getw2(void)
+	{
+	return w2;
+	}
+	inline float Getw3(void)
+	{
+	return w3;
+	}
 	inline void GetPendulumCoor(float* Coor) 
 	{Coor[0]=this->CoorC[0];Coor[1]=this->CoorC[1];}
 	inline void GetCoorB(float* Coor)

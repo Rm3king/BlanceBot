@@ -48,13 +48,22 @@ void cLinkSolver::Resolve(void)
 	/*输出摆长摆角*/
 	arm_atan2_f32(this->CoorC[1],this->CoorC[0],&this->PendulumRadian);
 	this->PendulumLength = _sqrtf(this->CoorC[0]*this->CoorC[0] + this->CoorC[1]*this->CoorC[1]);
+	/*校准轮速*/
+	float vxb,vyb,vxd,vyd;
+	vxb = -this->L1*SIN2*this->w1;
+	vyb = this->L1*COS2*this->w1;
+	vxd = -this->L1*SIN3*this->w4;
+	vyd = this->L1*COS3*this->w4; 
+	this->w2 = ((vxd-vxb)*arm_cos_f32(this->U3)+(vyd-vyb)*arm_sin_f32(this->U3))/(this->L2*arm_sin_f32(this->U3-this->U2));
+	this->w3 = ((vxd-vxb)*arm_cos_f32(this->U2)+(vyd-vyb)*arm_sin_f32(this->U2))/(this->L2*arm_sin_f32(this->U3-this->U2));
 }
 
-uint8_t	cLinkSolver::InputLink(float Theta3, float Theta2)
+uint8_t	cLinkSolver::InputLink(float Theta3, float Theta2,float w1,float w4)
 {
 	this->Theta3 = Theta3;
 	this->Theta2 = Theta2;
-	
+	this->w1 = w1;
+	this->w4 = w4;
 	if(Theta3>this->Theta3Max)
 	{this->LinkStatue = LINK_ERROR;}
 	else if(Theta2<this->Theta2Min)

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [WBXC\WBXC.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image WBXC\WBXC.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6190004: Last Updated: Mon Jul 15 18:43:43 2024
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6190004: Last Updated: Fri Jul 19 22:20:35 2024
 <BR><P>
 <H3>Maximum Stack Usage =        568 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1948,7 +1948,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_IRQHandler
 </UL>
 
-<P><STRONG><a name="[15a]"></a>HAL_FDCAN_RxFifo1Callback</STRONG> (Thumb, 216 bytes, Stack size 56 bytes, motortask.o(.text.HAL_FDCAN_RxFifo1Callback))
+<P><STRONG><a name="[15a]"></a>HAL_FDCAN_RxFifo1Callback</STRONG> (Thumb, 240 bytes, Stack size 56 bytes, motortask.o(.text.HAL_FDCAN_RxFifo1Callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 84<LI>Call Chain = HAL_FDCAN_RxFifo1Callback &rArr; HAL_FDCAN_GetRxMessage
 </UL>
 <BR>[Calls]<UL><LI><a href="#[16a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_GetRxMessage
@@ -2974,13 +2974,13 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> initaltask.o(.text.Task_Init)
 </UL>
-<P><STRONG><a name="[a2]"></a>MotorThreadFun(unsigned long)</STRONG> (Thumb, 1092 bytes, Stack size 160 bytes, motortask.o(.text._Z14MotorThreadFunm))
+<P><STRONG><a name="[a2]"></a>MotorThreadFun(unsigned long)</STRONG> (Thumb, 1108 bytes, Stack size 160 bytes, motortask.o(.text._Z14MotorThreadFunm))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = MotorThreadFun(unsigned long) &rArr; CANFilterConfig() &rArr; HAL_FDCAN_ConfigFilter
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_FDCAN_AddMessageToTxFifoQ
 <LI><a href="#[1f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_txe_semaphore_get
 <LI><a href="#[1ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_tx_thread_sleep_until
-<LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cLinkSolver::InputLink(float, float)
+<LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cLinkSolver::InputLink(float, float, float, float)
 <LI><a href="#[1f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cLinkSolver::Resolve()
 <LI><a href="#[1e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_tx_thread_sleep
 <LI><a href="#[1f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cDMMotor::MITTransmit()
@@ -3090,8 +3090,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> initaltask.o(.text.Task_Init)
 </UL>
-<P><STRONG><a name="[a5]"></a>CloseLoopThreadFun(unsigned long)</STRONG> (Thumb, 5456 bytes, Stack size 264 bytes, closelooptask.o(.text._Z18CloseLoopThreadFunm))
-<BR><BR>[Stack]<UL><LI>Max Depth = 424 + Unknown Stack Size
+<P><STRONG><a name="[a5]"></a>CloseLoopThreadFun(unsigned long)</STRONG> (Thumb, 5754 bytes, Stack size 272 bytes, closelooptask.o(.text._Z18CloseLoopThreadFunm))
+<BR><BR>[Stack]<UL><LI>Max Depth = 432 + Unknown Stack Size
 <LI>Call Chain = CloseLoopThreadFun(unsigned long) &rArr; VelFusionKF_Update &rArr; arm_mat_inverse_f32
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VelFusionKF_Reset
@@ -3132,7 +3132,7 @@ Global Symbols
 <P><STRONG><a name="[b3]"></a>cLoopTheta::PID_Init()</STRONG> (Thumb, 50 bytes, Stack size 0 bytes, controltask.o(.text._ZN10cLoopTheta8PID_InitEv))
 <BR>[Address Reference Count : 1]<UL><LI> controltask.o(.rodata._ZTV10cLoopTheta)
 </UL>
-<P><STRONG><a name="[1e5]"></a>cMotorUnit::cMotorUnit__sub_object()</STRONG> (Thumb, 736 bytes, Stack size 40 bytes, motortask.o(.text._ZN10cMotorUnitC2Ev))
+<P><STRONG><a name="[1e5]"></a>cMotorUnit::cMotorUnit__sub_object()</STRONG> (Thumb, 760 bytes, Stack size 40 bytes, motortask.o(.text._ZN10cMotorUnitC2Ev))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56 + Unknown Stack Size
 <LI>Call Chain = cMotorUnit::cMotorUnit__sub_object() &rArr; arm_biquad_cascade_df1_init_f32
 </UL>
@@ -3161,8 +3161,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CloseLoopThreadFun(unsigned long)
 </UL>
 
-<P><STRONG><a name="[1f0]"></a>cLinkSolver::Resolve()</STRONG> (Thumb, 376 bytes, Stack size 48 bytes, linksolver.o(.text._ZN11cLinkSolver7ResolveEv))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = cLinkSolver::Resolve()
+<P><STRONG><a name="[1f0]"></a>cLinkSolver::Resolve()</STRONG> (Thumb, 548 bytes, Stack size 64 bytes, linksolver.o(.text._ZN11cLinkSolver7ResolveEv))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = cLinkSolver::Resolve()
 </UL>
 <BR>[Calls]<UL><LI><a href="#[22e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_atan2_f32
 <LI><a href="#[20b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32
@@ -3171,7 +3171,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MotorThreadFun(unsigned long)
 </UL>
 
-<P><STRONG><a name="[1ef]"></a>cLinkSolver::InputLink(float, float)</STRONG> (Thumb, 58 bytes, Stack size 0 bytes, linksolver.o(.text._ZN11cLinkSolver9InputLinkEff))
+<P><STRONG><a name="[1ef]"></a>cLinkSolver::InputLink(float, float, float, float)</STRONG> (Thumb, 66 bytes, Stack size 0 bytes, linksolver.o(.text._ZN11cLinkSolver9InputLinkEffff))
 <BR><BR>[Called By]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MotorThreadFun(unsigned long)
 </UL>
 
@@ -3217,7 +3217,7 @@ Global Symbols
 <P><STRONG><a name="[b8]"></a>cLooplen_Stop::PID_Init()</STRONG> (Thumb, 70 bytes, Stack size 0 bytes, controltask.o(.text._ZN13cLooplen_Stop8PID_InitEv))
 <BR>[Address Reference Count : 1]<UL><LI> controltask.o(.rodata._ZTV13cLooplen_Stop)
 </UL>
-<P><STRONG><a name="[1e4]"></a>cChasisControl::cChasisControl__sub_object()</STRONG> (Thumb, 1564 bytes, Stack size 40 bytes, controltask.o(.text._ZN14cChasisControlC2Ev))
+<P><STRONG><a name="[1e4]"></a>cChasisControl::cChasisControl__sub_object()</STRONG> (Thumb, 1542 bytes, Stack size 40 bytes, controltask.o(.text._ZN14cChasisControlC2Ev))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40 + Unknown Stack Size
 <LI>Call Chain = cChasisControl::cChasisControl__sub_object()
 </UL>
@@ -4116,6 +4116,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DrawUIThreadFun(unsigned long)
 <LI><a href="#[22d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cLinkSolver::VMCUpdate()
 <LI><a href="#[1f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cLinkSolver::Resolve()
+<LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DebugThreadFun(unsigned long)
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CloseLoopThreadFun(unsigned long)
 </UL>
 
@@ -4186,6 +4187,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DrawUIThreadFun(unsigned long)
 <LI><a href="#[22d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cLinkSolver::VMCUpdate()
 <LI><a href="#[1f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cLinkSolver::Resolve()
+<LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DebugThreadFun(unsigned long)
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CloseLoopThreadFun(unsigned long)
 </UL>
 
@@ -4665,13 +4667,15 @@ Local Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> initaltask.o(.text.Task_Init)
 </UL>
-<P><STRONG><a name="[a9]"></a>DebugThreadFun(unsigned long)</STRONG> (Thumb, 384 bytes, Stack size 16 bytes, initaltask.o(.text._ZL14DebugThreadFunm))
-<BR><BR>[Stack]<UL><LI>Max Depth = 168 + Unknown Stack Size
+<P><STRONG><a name="[a9]"></a>DebugThreadFun(unsigned long)</STRONG> (Thumb, 404 bytes, Stack size 8 bytes, initaltask.o(.text._ZL14DebugThreadFunm))
+<BR><BR>[Stack]<UL><LI>Max Depth = 160 + Unknown Stack Size
 <LI>Call Chain = DebugThreadFun(unsigned long) &rArr; DebugPrintf(unsigned char*, char const*, ...) &rArr; vsnprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_txe_byte_allocate
 <LI><a href="#[204]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cUART::Transmit_DMA(unsigned char*, unsigned short)
 <LI><a href="#[22b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;cUART::UART_Init(USART_TypeDef*, DMA_TypeDef*, unsigned int)
+<LI><a href="#[20b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32
+<LI><a href="#[20a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32
 <LI><a href="#[1e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_tx_thread_sleep
 <LI><a href="#[1e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DebugPrintf(unsigned char*, char const*, ...)
 <LI><a href="#[20d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d

@@ -87,8 +87,8 @@ void CloseLoopThreadFun(ULONG initial_input)
 			RobotControl->ChasisControl.LoopEscape[0].SetRef(WheelIq[0]);
 			RobotControl->ChasisControl.LoopEscape[1].SetRef(WheelIq[1]);
 			
-			RobotControl->ChasisControl.LoopEscape[0].PID_Cal(RobotControl->ChasisControl.MotorUnits->KF9025[0].GetSpeed());
-			RobotControl->ChasisControl.LoopEscape[1].PID_Cal(RobotControl->ChasisControl.MotorUnits->KF9025[1].GetSpeed());
+			RobotControl->ChasisControl.LoopEscape[0].PID_Cal(RobotControl->ChasisControl.MotorUnits->KF9025[0].GetSpeed()*0.0765);  
+			RobotControl->ChasisControl.LoopEscape[1].PID_Cal(RobotControl->ChasisControl.MotorUnits->KF9025[1].GetSpeed()*0.0765);
 			
 			RobotControl->ChasisControl.MotorUnits->KF9025[0].UpdateTorque(RobotControl->ChasisControl.LoopEscape[0].GetOut());
 			RobotControl->ChasisControl.MotorUnits->KF9025[1].UpdateTorque(RobotControl->ChasisControl.LoopEscape[1].GetOut());			
@@ -248,10 +248,10 @@ void CloseLoopThreadFun(ULONG initial_input)
 			RobotControl->ChasisControl.Lleg_ObserveVal.X[0] = RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumRadian() + RobotControl->ChasisControl.ObserveVal.ChasisPitch - PI_Half ;
 			RobotControl->ChasisControl.Rleg_ObserveVal.X[0] = RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumRadian() + RobotControl->ChasisControl.ObserveVal.ChasisPitch - PI_Half ;
 			RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot = -1.5*Leg_Ldot[0];
-			RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot = 1.5*Leg_Rdot[0];
+			RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot = -1.5*Leg_Rdot[0];
 			/* 微分计算摆角速度 */
 			RobotControl->ChasisControl.Lleg_ObserveVal.X[1] = 1.5*Leg_Ldot[1]-INS->Gyro[1];
-			RobotControl->ChasisControl.Rleg_ObserveVal.X[1] = -1.5*Leg_Rdot[1]-INS->Gyro[1];
+			RobotControl->ChasisControl.Rleg_ObserveVal.X[1] = 1.5*Leg_Rdot[1]-INS->Gyro[1];
 			RobotControl->ChasisControl.Lleg_ObserveVal.X[4] = -RobotControl->ChasisControl.ObserveVal.ChasisPitch;
 			RobotControl->ChasisControl.Rleg_ObserveVal.X[4] = -RobotControl->ChasisControl.ObserveVal.ChasisPitch;
 			RobotControl->ChasisControl.Lleg_ObserveVal.X[5] = INS->Gyro[1];
@@ -271,9 +271,23 @@ void CloseLoopThreadFun(ULONG initial_input)
 			//融合惯导空间加速度  防打滑
 /**/  realaccelX = ((-RobotControl->INS->Accel[0]+RobotControl->INS->Accel[2])+9.8f*(SinPhi-CosPhi))/(SinPhi+CosPhi);
 			RobotControl->ChasisControl.accelX=realaccelX;
-			
+			//左腿轮子相对于大地的角速度
+			RobotControl->ChasisControl.ObserveVal.X[0] = RobotControl->ChasisControl.MotorUnits->KF9025[0].GetSpeed()+RobotControl->ChasisControl.MotorUnits->LinkSolver[0].Getw2()-INS->Gyro[1];
+			//右腿轮子相当于大地的角速度
+			RobotControl->ChasisControl.ObserveVal.X[1] = -RobotControl->ChasisControl.MotorUnits->KF9025[1].GetSpeed()+RobotControl->ChasisControl.MotorUnits->LinkSolver[1].Getw3()-INS->Gyro[1];
+			//求线速度
+			RobotControl->ChasisControl.ObserveVal.X[0] = RobotControl->ChasisControl.ObserveVal.X[0]*0.0765;
+			RobotControl->ChasisControl.ObserveVal.X[1] = RobotControl->ChasisControl.ObserveVal.X[1]*0.0765;
+			//考虑腿打滑
+			RobotControl->ChasisControl.ObserveVal.X[0] += RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumLen()*RobotControl->ChasisControl.Lleg_ObserveVal.X[1]*arm_cos_f32(RobotControl->ChasisControl.Lleg_ObserveVal.X[0])
+			+RobotControl->ChasisControl.Lleg_ObserveVal.ChasisLenDot*arm_sin_f32(RobotControl->ChasisControl.Lleg_ObserveVal.X[0]);
+			RobotControl->ChasisControl.ObserveVal.X[1] += RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumLen()*RobotControl->ChasisControl.Rleg_ObserveVal.X[1]*arm_cos_f32(RobotControl->ChasisControl.Rleg_ObserveVal.X[0])
+			+RobotControl->ChasisControl.Rleg_ObserveVal.ChasisLenDot*arm_sin_f32(RobotControl->ChasisControl.Rleg_ObserveVal.X[0]);
+			//二者取均值
+			RobotControl->ChasisControl.ObserveVal.X[3] = 0.5*(RobotControl->ChasisControl.ObserveVal.X[0]+RobotControl->ChasisControl.ObserveVal.X[1]);
+			//左轮相对于大地坐标系的速度
 			/*This is good*/   //里程计和加速度融合
-			RobotControl->ChasisControl.VelKF->UpdateKalman(RobotControl->ChasisControl.MotorUnits->GetVel(), realaccelX);
+			RobotControl->ChasisControl.VelKF->UpdateKalman(RobotControl->ChasisControl.ObserveVal.X[3], -body_Accel);
 				
 				RobotControl->ChasisControl.obervalx[0]=RobotControl->ChasisControl.VelKF->KF.xhat.pData[0];
 				RobotControl->ChasisControl.obervalx[1]=RobotControl->ChasisControl.VelKF->KF.xhat.pData[1];
@@ -487,10 +501,10 @@ void CloseLoopThreadFun(ULONG initial_input)
 			RobotControl->ChasisControl.LoopLen_Dot[0].SetRef(0);
 			RobotControl->ChasisControl.LoopLen_Dot[0].PID_Cal(L_leg_dot[0]);
 			RobotControl->ChasisControl.LoopLen_Dot[1].SetRef(0);
-			RobotControl->ChasisControl.LoopLen_Dot[1].PID_Cal(R_leg_dot[0]);
+			RobotControl->ChasisControl.LoopLen_Dot[1].PID_Cal(-R_leg_dot[0]);
 			/* 速度反馈劈叉环 */
 			RobotControl->ChasisControl.LoopTheta_Spf.SetRef(RobotControl->ChasisControl.LoopTheta_Spf.MAXTHETA);
-			RobotControl->ChasisControl.LoopTheta_Spf.PID_Cal(RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumRadian() - RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumRadian(),-(Leg_Ldot[1]+Leg_Rdot[1]));
+			RobotControl->ChasisControl.LoopTheta_Spf.PID_Cal(RobotControl->ChasisControl.MotorUnits->LinkSolver[0].GetPendulumRadian() - RobotControl->ChasisControl.MotorUnits->LinkSolver[1].GetPendulumRadian(),Leg_Rdot[1]-Leg_Ldot[1]);
 			/*腿长速度*/
 			
 			/*VMC*/
